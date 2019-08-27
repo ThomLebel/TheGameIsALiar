@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+	public float health = 10f;
+	public float damage = 5f;
+
+	public CameraShake cameraShake;
+	public float shakeDuration = 0.15f;
+	public float shakeMagnitude = .2f;
 	public bool canPlay = true;
 	public LayerMask blockingLayer;
 
@@ -18,9 +24,9 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+		if (!GameMaster.Instance.playerTurn) return;
 
-		
+		input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
 		if (input.x == 0 && input.y == 0)
 		{
@@ -39,6 +45,7 @@ public class PlayerScript : MonoBehaviour
 			return;
 		}
 
+		Vector3 originalPos = transform.position;
 		RaycastHit2D hit;
 		Vector2 start = transform.position;
 		Vector2 end = start + input;
@@ -51,9 +58,28 @@ public class PlayerScript : MonoBehaviour
 
 		if (hit.transform == null)
 		{
-			transform.position = new Vector3(transform.position.x + input.x, transform.position.y + input.y, transform.position.z);
+			transform.position = new Vector3(originalPos.x + input.x, originalPos.y + input.y, originalPos.z);
 		}
-		
+		else
+		{
+			if (hit.transform.tag == "Enemy")
+			{
+				hit.transform.GetComponent<EnemyScript>().Hit(damage);
+			}
+
+			StartCoroutine(cameraShake.Shake(shakeDuration, shakeMagnitude));
+		}
+
+		GameMaster.Instance.playerTurn = false;
 		canPlay = false;
+	}
+
+	public void Hit(float damageTaken)
+	{
+		health -= damageTaken;
+		if (health <= 0)
+		{
+			health = 0;
+		}
 	}
 }
