@@ -201,7 +201,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46151a5d16d203d43ba13a38bc22d9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterName: Soldier
   health: 10
+  currentWeapon: {fileID: 412332853725093071, guid: c750372560a6b514a9d6dd8b2a94cf05,
+    type: 3}
   damage: 3
   active: 1
   actionTime: 0.2

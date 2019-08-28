@@ -2,31 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour
-{
-	public float health = 10f;
-	public float damage = 5f;
-	public Weapon currentWeapon;
-	
-	public float shakeDuration = 0.15f;
-	public float shakeMagnitude = .2f;
-	//public bool canPlay = true;
-	public LayerMask blockingLayer;
-	
-	private CharacterInformation characterInfo;
+public class PlayerScript : CharacterScript
+{	
 	private Vector2 input;
-	[SerializeField]
-	private Vector2 currentDir = new Vector2(0f,-1f);
-
-	private void Awake()
-	{
-		characterInfo.ownCollider = GetComponent<BoxCollider2D>();
-	}
 
 	// Start is called before the first frame update
-	void Start()
+	public override void Start()
     {
-    }
+		base.Start();
+		currentWeapon.weapon.owner = GameConstants.TAG_Player;
+		characterInfo.direction = new Vector2(0f, -1f);
+	}
 
     // Update is called once per frame
     void Update()
@@ -42,7 +28,7 @@ public class PlayerScript : MonoBehaviour
 
 		if (input.x != 0 || input.y != 0)
 		{
-			currentDir = input;
+			characterInfo.direction = input;
 			AttemptMove(input);
 		}
 
@@ -53,31 +39,28 @@ public class PlayerScript : MonoBehaviour
 		}
 	}
 
-	void AttemptMove(Vector2 input)
+	public override void AttemptMove(Vector2 input)
 	{
-		Vector3 originalPos = transform.position;
-		Transform targetCell = CheckNextCell(currentDir, blockingLayer);
-
-		if (targetCell == null)
-		{
-			transform.position = new Vector3(originalPos.x + input.x, originalPos.y + input.y, originalPos.z);
-		}
-		else
-		{
-			if (targetCell.tag == GameConstants.TAG_Enemy)
-			{
-				Attack(targetCell);
-			}
-		}
+		base.AttemptMove(input);
 
 		GameMaster.Instance.playerTurn = false;
+	}
+
+	public override void CantMove(Transform target)
+	{
+		characterInfo.origin = transform;
+		characterInfo.target = target;
+
+		if (target.tag == GameConstants.TAG_Enemy)
+		{
+			Attack(target);
+		}
 	}
 
 	void Action()
 	{
 		characterInfo.origin = transform;
-		characterInfo.direction = currentDir;
-		characterInfo.target = CheckNextCell(currentDir, blockingLayer);
+		characterInfo.target = CheckNextCell(characterInfo.direction, blockingLayer);
 
 		if (characterInfo.target == null)
 		{
@@ -95,18 +78,9 @@ public class PlayerScript : MonoBehaviour
 
 	void Attack(Transform attackedCell)
 	{
-		if (attackedCell != null)
-		{
-			if (attackedCell.tag == GameConstants.TAG_Enemy)
-			{
-				Debug.Log("We attack "+attackedCell.name);
-				EnemyScript enemyScript = attackedCell.GetComponent<EnemyScript>();
+		currentWeapon.Attack(characterInfo, GameConstants.TAG_Enemy);
 
-				enemyScript.Hit(damage);
-			}
-		}
-
-		StartCoroutine(CameraShake.Instance.Shake(shakeDuration, shakeMagnitude));
+		StartCoroutine(CameraShake.Instance.Shake());
 		GameMaster.Instance.ActivateEnemies();
 		GameMaster.Instance.playerTurn = false;
 	}
@@ -118,36 +92,9 @@ public class PlayerScript : MonoBehaviour
 		GameMaster.Instance.playerTurn = false;
 	}
 
-	public void Hit(float damageTaken)
+	public override void TakeDamage(float damageTaken)
 	{
-		health -= damageTaken;
-		StartCoroutine(CameraShake.Instance.Shake(shakeDuration, shakeMagnitude));
-		if (health <= 0)
-		{
-			health = 0;
-		}
+		base.TakeDamage(damageTaken);
+		StartCoroutine(CameraShake.Instance.Shake());
 	}
-
-	private Transform CheckNextCell(Vector2 direction, LayerMask mask)
-	{
-		RaycastHit2D hit;
-		Vector2 start = transform.position;
-		Vector2 end = start + direction;
-
-		characterInfo.ownCollider.enabled = false;
-
-		hit = Physics2D.Linecast(start, end, mask);
-
-		characterInfo.ownCollider.enabled = true;
-
-		return hit.transform;
-	}
-
-	//public struct CharInfo
-	//{
-	//	public Transform origin;
-	//	public Vector2 direction;
-	//	public Collider2D ownCollider;
-	//	public Transform target;
-	//}
 }

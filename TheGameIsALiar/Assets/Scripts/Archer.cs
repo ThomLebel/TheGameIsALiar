@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Archer : EnemyScript
+public class Archer : MonoBehaviour
 {
-	public int arrows = 3;
+	/*public int arrows = 3;
 	public GameObject arrow;
 
 	public override void PlayTurn()
@@ -31,5 +31,5 @@ public class Archer : EnemyScript
 		GameMaster.Instance.ActivateEnemies();
 
 		arrows--;
-	}
+	}*/
 }

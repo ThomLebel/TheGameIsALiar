@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5216380993315205012}
   - component: {fileID: 5216380993315205019}
   - component: {fileID: 5216380993315205018}
-  - component: {fileID: 5315539700645402680}
+  - component: {fileID: 8191814071057076663}
   m_Layer: 10
   m_Name: Archer
   m_TagString: Enemy
@@ -109,7 +109,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &5315539700645402680
+--- !u!114 &8191814071057076663
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,18 +118,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 5216380993315205016}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2288a780724deb8479b67e184f1b0f04, type: 3}
+  m_Script: {fileID: 11500000, guid: 46151a5d16d203d43ba13a38bc22d9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterName: Archer
   health: 6
-  damage: 5
-  active: 1
+  currentWeapon: {fileID: 6199464980501835379, guid: 46a41103e21289e46bf5257e440872ce,
+    type: 3}
+  damage: 0
+  active: 0
   actionTime: 0.2
   blockingLayer:
     serializedVersion: 2
     m_Bits: 1792
-  arrows: 3
-  arrow: {fileID: 7017807323568134177, guid: 378a816a04adee24f949d93ebe845ca9, type: 3}
 --- !u!1 &5605711047772878589
 GameObject:
   m_ObjectHideFlags: 0

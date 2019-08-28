@@ -6,6 +6,7 @@ using UnityEngine;
 public class WeaponInfo : ScriptableObject
 {
 	public string weaponName;
+	public string owner;
 	public int damage;
 	[Tooltip("The type of munition this weapon uses, arrow for bow and nothing for sword")]
 	public GameObject munition;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbba9a2c2d78898428ea2c8a59c96e50, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
-  weaponName: 
-  damage: 0
+  weaponName: Sword
+  damage: 5
   munition: {fileID: 0}
   ammo: 0

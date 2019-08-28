@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-	WeaponInfo weapon;
+	public WeaponInfo weapon;
 
 	public virtual void Attack(CharacterInformation characterInfo, string targetTag)
 	{
@@ -12,10 +12,9 @@ public class Weapon : MonoBehaviour
 		{
 			if (characterInfo.target.tag == targetTag)
 			{
-				Debug.Log("We attack " + characterInfo.target.name);
-				//EnemyScript enemyScript = attackedCell.GetComponent<EnemyScript>();
+				CharacterScript targetScript = characterInfo.target.GetComponent<CharacterScript>();
 
-				//enemyScript.Hit(damage);
+				targetScript.TakeDamage(weapon.damage);
 			}
 		}
 	}

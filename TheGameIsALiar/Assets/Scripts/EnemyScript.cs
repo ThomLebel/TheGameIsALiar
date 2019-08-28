@@ -2,34 +2,63 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyScript : MonoBehaviour
+public class EnemyScript : CharacterScript
 {
-	public float health;
-	public float damage;
 	public bool active;
 	public float actionTime = 0.2f;
-	public LayerMask blockingLayer;
 
-	protected float currentRotation = 0f;
+	private float currentRotation = 0f;
 
-	protected Transform target;
-	protected CharacterInformation characterInfo;
+	private Transform target;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    public override void Start()
+	{
+		base.Start();
 		target = GameObject.FindGameObjectWithTag(GameConstants.TAG_Player).transform;
 		GameMaster.Instance.AddToList(this);
-    }
-
-	public virtual void PlayTurn()
-	{
-		Vector2 direction = GetPlayerDirection();
-		RotateTowardPlayer(direction);
-		AttemptMove(direction);
+		currentWeapon.weapon.owner = GameConstants.TAG_Enemy;
 	}
 
-	protected Vector2 GetPlayerDirection()
+	public void PlayTurn()
+	{
+		characterInfo.origin = transform;
+		characterInfo.direction = GetPlayerDirection();
+		characterInfo.target = CheckNextCell(characterInfo.direction, blockingLayer);
+
+		RotateTowardPlayer(characterInfo.direction);
+
+		if (currentWeapon.weapon.ammo > 0)
+		{
+			currentWeapon.Attack(characterInfo, GameConstants.TAG_Player);
+		}
+		else
+		{
+			AttemptMove(characterInfo.direction);
+		}
+	}
+
+	public override void AttemptMove(Vector2 direction)
+	{
+		base.AttemptMove(direction);
+	}
+
+	public override void CantMove(Transform target)
+	{
+		if (target.tag == GameConstants.TAG_Player)
+		{
+			Attack();
+		}
+	}
+
+	private void Attack()
+	{
+		currentWeapon.Attack(characterInfo, GameConstants.TAG_Player);
+		GameMaster.Instance.ActivateEnemies();
+	}
+
+
+	private Vector2 GetPlayerDirection()
 	{
 		Vector2 direction = Vector2.zero;
 
@@ -41,35 +70,11 @@ public class EnemyScript : MonoBehaviour
 		{
 			direction.x = target.position.x > transform.position.x ? 1 : -1;
 		}
-		
+
 		return direction;
 	}
 
-	public void AttemptMove(Vector2 direction)
-	{
-		Vector3 originalPos = transform.position;
-		RaycastHit2D hit;
-		Vector2 start = transform.position;
-		Vector2 end = start + direction;
-
-		transform.GetComponent<BoxCollider2D>().enabled = false;
-
-		hit = Physics2D.Linecast(start, end, blockingLayer);
-
-		transform.GetComponent<BoxCollider2D>().enabled = true;
-
-		if (hit.transform == null)
-		{
-			transform.position = new Vector3(originalPos.x + direction.x, originalPos.y + direction.y, originalPos.z);
-		}
-		else if (hit.transform.tag == GameConstants.TAG_Player)
-		{
-			hit.transform.GetComponent<PlayerScript>().Hit(damage);
-			GameMaster.Instance.ActivateEnemies();
-		}
-	}
-
-	public void RotateTowardPlayer(Vector2 direction)
+	private void RotateTowardPlayer(Vector2 direction)
 	{
 		float rotationZ = currentRotation;
 
@@ -89,7 +94,7 @@ public class EnemyScript : MonoBehaviour
 		}
 	}
 
-	public void Hit(float damageTaken)
+	public override void TakeDamage(float damageTaken)
 	{
 		if (!active)
 		{
@@ -97,10 +102,9 @@ public class EnemyScript : MonoBehaviour
 			return;
 		}
 
-		health -= damageTaken;
+		base.TakeDamage(damageTaken);
 		if (health <= 0)
 		{
-			health = 0;
 			Kill();
 		}
 	}

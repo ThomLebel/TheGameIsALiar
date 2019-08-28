@@ -1175,6 +1175,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e23f5e83eea356744b4d7f179b81e007, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0.15
+  magnitude: 0.2
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1985,7 +1987,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0fceea592fd587645a328cd336b2d776, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3641,6 +3643,17 @@ PrefabInstance:
       propertyPath: cameraShake
       value: 
       objectReference: {fileID: 519420030}
+    - target: {fileID: 5216380993315205017, guid: 914822bd845a52b439ed8e5831b159ef,
+        type: 3}
+      propertyPath: currentWeapon
+      value: 
+      objectReference: {fileID: 412332853725093071, guid: c750372560a6b514a9d6dd8b2a94cf05,
+        type: 3}
+    - target: {fileID: 5216380993315205017, guid: 914822bd845a52b439ed8e5831b159ef,
+        type: 3}
+      propertyPath: characterName
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 914822bd845a52b439ed8e5831b159ef, type: 3}
 --- !u!1001 &8151412959878289026

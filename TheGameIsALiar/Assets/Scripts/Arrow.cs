@@ -7,6 +7,7 @@ public class Arrow : MonoBehaviour
 	public float damage = 4f;
 	public float speed = 6f;
 	public Vector2 direction;
+	public string owner = "";
 
     // Update is called once per frame
     void Update()
@@ -16,15 +17,14 @@ public class Arrow : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.tag == GameConstants.TAG_Enemy)
+		if (collision.tag == owner)
 		{
-			
 			return;
 		}
 
-		if (collision.tag == GameConstants.TAG_Player)
+		if (collision.tag == GameConstants.TAG_Enemy || collision.tag == GameConstants.TAG_Player)
 		{
-			collision.GetComponent<PlayerScript>().Hit(damage);
+			collision.GetComponent<CharacterScript>().TakeDamage(damage);
 		}
 
 		Destroy(gameObject);
