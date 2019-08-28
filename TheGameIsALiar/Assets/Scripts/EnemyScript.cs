@@ -8,34 +8,41 @@ public class EnemyScript : MonoBehaviour
 	public float damage;
 	public bool active;
 	public float actionTime = 0.2f;
-
 	public LayerMask blockingLayer;
 
-	private Transform player;
+	protected float currentRotation = 0f;
+
+	protected Transform target;
+	protected CharacterInformation characterInfo;
 
     // Start is called before the first frame update
     void Start()
     {
-		player = GameObject.FindGameObjectWithTag("Player").transform; 
+		target = GameObject.FindGameObjectWithTag(GameConstants.TAG_Player).transform;
+		GameMaster.Instance.AddToList(this);
     }
 
 	public virtual void PlayTurn()
 	{
-		Move();
+		Vector2 direction = GetPlayerDirection();
+		RotateTowardPlayer(direction);
+		AttemptMove(direction);
 	}
 
-    protected virtual void Move()
+	protected Vector2 GetPlayerDirection()
 	{
 		Vector2 direction = Vector2.zero;
-		
-		if (Mathf.Abs(player.position.x - transform.position.x) < float.Epsilon)
 
-			direction.y = player.position.y > transform.position.y ? 1 : -1;
-
+		if (Mathf.Abs(target.position.x - transform.position.x) < float.Epsilon)
+		{
+			direction.y = target.position.y > transform.position.y ? 1 : -1;
+		}
 		else
-			direction.x = player.position.x > transform.position.x ? 1 : -1;
-
-		AttemptMove(direction);
+		{
+			direction.x = target.position.x > transform.position.x ? 1 : -1;
+		}
+		
+		return direction;
 	}
 
 	public void AttemptMove(Vector2 direction)
@@ -55,19 +62,52 @@ public class EnemyScript : MonoBehaviour
 		{
 			transform.position = new Vector3(originalPos.x + direction.x, originalPos.y + direction.y, originalPos.z);
 		}
-		else if (hit.transform.tag == "Player")
+		else if (hit.transform.tag == GameConstants.TAG_Player)
 		{
 			hit.transform.GetComponent<PlayerScript>().Hit(damage);
+			GameMaster.Instance.ActivateEnemies();
+		}
+	}
+
+	public void RotateTowardPlayer(Vector2 direction)
+	{
+		float rotationZ = currentRotation;
+
+		if (direction.y != 0)
+		{
+			rotationZ = direction.y == 1 ? 0f : 180f;
+		}
+		else
+		{
+			rotationZ = direction.x == 1 ? -90f : 90f;
+		}
+
+		if (rotationZ != currentRotation)
+		{
+			currentRotation = rotationZ;
+			transform.rotation = Quaternion.Euler(0f,0f,currentRotation);
 		}
 	}
 
 	public void Hit(float damageTaken)
 	{
-		Debug.Log("hit !");
+		if (!active)
+		{
+			Kill();
+			return;
+		}
+
 		health -= damageTaken;
 		if (health <= 0)
 		{
 			health = 0;
+			Kill();
 		}
+	}
+
+	public void Kill()
+	{
+		GameMaster.Instance.RemoveFromList(this);
+		Destroy(gameObject);
 	}
 }

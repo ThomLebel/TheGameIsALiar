@@ -9,6 +9,7 @@ public class GameMaster : MonoBehaviour
 	public bool playerTurn = true;
 	public bool enemiesTurn = false;
 	public float turnDelay = 0.1f;
+	
 
 	public static GameMaster Instance;
 
@@ -21,7 +22,7 @@ public class GameMaster : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-		player = GameObject.FindGameObjectWithTag("Player");
+		player = GameObject.FindGameObjectWithTag(GameConstants.TAG_Player);
     }
 
     // Update is called once per frame
@@ -51,14 +52,31 @@ public class GameMaster : MonoBehaviour
 			EnemyScript enemy = enemies[i];
 
 			if (enemy.active)
+			{
 				enemy.PlayTurn();
-			else
-				yield return new WaitForSeconds(turnDelay);
-
-			yield return new WaitForSeconds(enemy.actionTime);
+				yield return new WaitForSeconds(enemy.actionTime);
+			}
 		}
 
 		playerTurn = true;
 		enemiesTurn = false;
+	}
+
+	public void AddToList(EnemyScript enemy)
+	{
+		enemies.Add(enemy);
+	}
+
+	public void RemoveFromList(EnemyScript enemy)
+	{
+		enemies.Remove(enemy);
+	}
+
+	public void ActivateEnemies()
+	{
+		foreach(EnemyScript enemy in enemies)
+		{
+			enemy.active = true;
+		}
 	}
 }
