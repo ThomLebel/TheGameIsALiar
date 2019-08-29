@@ -205,9 +205,12 @@ MonoBehaviour:
   health: 10
   currentWeapon: {fileID: 412332853725093071, guid: c750372560a6b514a9d6dd8b2a94cf05,
     type: 3}
-  damage: 3
-  active: 1
-  actionTime: 0.2
   blockingLayer:
     serializedVersion: 2
     m_Bits: 1792
+  healthBarText: {fileID: 0}
+  healthBar: {fileID: 0}
+  active: 1
+  actionTime: 0.2
+  healthBarPrefab: {fileID: 5497059285209359404, guid: 679200cda4a162e4bb10223c382770f0,
+    type: 3}

@@ -1,9 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerScript : CharacterScript
-{	
+{
+	public Text manaBarText;
+	public Image manaBar;
+	public Text expBarText;
+	public Image expBar;
+
 	private Vector2 input;
 
 	// Start is called before the first frame update
@@ -12,6 +18,7 @@ public class PlayerScript : CharacterScript
 		base.Start();
 		currentWeapon.weapon.owner = GameConstants.TAG_Player;
 		characterInfo.direction = new Vector2(0f, -1f);
+		UpdateHealthBar();
 	}
 
     // Update is called once per frame
@@ -95,6 +102,13 @@ public class PlayerScript : CharacterScript
 	public override void TakeDamage(float damageTaken)
 	{
 		base.TakeDamage(damageTaken);
+		UpdateHealthBar();
 		StartCoroutine(CameraShake.Instance.Shake());
+	}
+
+	public override void UpdateHealthBar()
+	{
+		base.UpdateHealthBar();
+		healthBarText.text = (health + "/" + maxHealth).ToString();
 	}
 }

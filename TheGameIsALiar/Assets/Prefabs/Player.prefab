@@ -120,12 +120,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 223b68e85628ca642b4fbe7a73084e08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterName: Player
   health: 10
-  damage: 5
-  cameraShake: {fileID: 0}
-  shakeDuration: 0.15
-  shakeMagnitude: 0.2
-  canPlay: 1
+  currentWeapon: {fileID: 412332853725093071, guid: c750372560a6b514a9d6dd8b2a94cf05,
+    type: 3}
   blockingLayer:
     serializedVersion: 2
     m_Bits: 1280
+  healthBarText: {fileID: 0}
+  healthBar: {fileID: 0}

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class CharacterScript : MonoBehaviour
 {
@@ -8,12 +9,16 @@ public abstract class CharacterScript : MonoBehaviour
 	public float health = 10f;
 	public Weapon currentWeapon;
 	public LayerMask blockingLayer;
+	public Text healthBarText;
+	public Image healthBar;
 
+	protected float maxHealth;
 	protected CharacterInformation characterInfo = new CharacterInformation();
 
 	public virtual void Start()
 	{
 		characterInfo.ownCollider = GetComponent<BoxCollider2D>();
+		maxHealth = health;
 	}
 
 	public virtual void AttemptMove(Vector2 direction)
@@ -40,6 +45,11 @@ public abstract class CharacterScript : MonoBehaviour
 		{
 			health = 0;
 		}
+	}
+
+	public virtual void UpdateHealthBar()
+	{
+		healthBar.GetComponent<RectTransform>().localScale = new Vector3(health / maxHealth, 1f, 1f);
 	}
 
 	protected Transform CheckNextCell(Vector2 direction, LayerMask mask)

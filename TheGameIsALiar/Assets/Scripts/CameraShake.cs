@@ -9,14 +9,21 @@ public class CameraShake : MonoBehaviour
 
 	public static CameraShake Instance;
 
+	private Vector3 originalPos;
+
 	private void Awake()
 	{
 		Instance = this;
 	}
 
+	private void Start()
+	{
+		originalPos = transform.localPosition;
+	}
+
 	public IEnumerator Shake()
 	{
-		Vector3 originalPos = transform.localPosition;
+		//Vector3 originalPos = transform.localPosition;
 
 		float elapsed = 0.0f;
 		while (elapsed < duration)

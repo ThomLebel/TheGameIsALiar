@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyScript : CharacterScript
 {
 	public bool active;
 	public float actionTime = 0.2f;
+	public GameObject healthBarPrefab;
 
+	private GameObject enemyHealthBar;
 	private float currentRotation = 0f;
-
 	private Transform target;
 
     // Start is called before the first frame update
@@ -18,6 +20,11 @@ public class EnemyScript : CharacterScript
 		target = GameObject.FindGameObjectWithTag(GameConstants.TAG_Player).transform;
 		GameMaster.Instance.AddToList(this);
 		currentWeapon.weapon.owner = GameConstants.TAG_Enemy;
+		enemyHealthBar = Instantiate(healthBarPrefab, GameObject.Find("Canvas").transform);
+		healthBar = enemyHealthBar.transform.Find("bgHealthBar/healthBarProgress").GetComponent<Image>();
+		enemyHealthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position);
+		Debug.Log(enemyHealthBar.transform.position);
+		enemyHealthBar.SetActive(false);
 	}
 
 	public void PlayTurn()
@@ -41,6 +48,7 @@ public class EnemyScript : CharacterScript
 	public override void AttemptMove(Vector2 direction)
 	{
 		base.AttemptMove(direction);
+		enemyHealthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up);
 	}
 
 	public override void CantMove(Transform target)
@@ -101,8 +109,13 @@ public class EnemyScript : CharacterScript
 			Kill();
 			return;
 		}
+		if (health == maxHealth)
+		{
+			enemyHealthBar.SetActive(true);
+		}
 
 		base.TakeDamage(damageTaken);
+		UpdateHealthBar();
 		if (health <= 0)
 		{
 			Kill();
@@ -112,6 +125,7 @@ public class EnemyScript : CharacterScript
 	public void Kill()
 	{
 		GameMaster.Instance.RemoveFromList(this);
+		Destroy(enemyHealthBar);
 		Destroy(gameObject);
 	}
 }
