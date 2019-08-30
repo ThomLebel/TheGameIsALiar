@@ -23,7 +23,7 @@ public class EnemyScript : CharacterScript
 		enemyHealthBar = Instantiate(healthBarPrefab, GameObject.Find("Canvas").transform);
 		healthBar = enemyHealthBar.transform.Find("bgHealthBar/healthBarProgress").GetComponent<Image>();
 		enemyHealthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-		Debug.Log(enemyHealthBar.transform.position);
+		//Debug.Log(enemyHealthBar.transform.position);
 		enemyHealthBar.SetActive(false);
 	}
 
