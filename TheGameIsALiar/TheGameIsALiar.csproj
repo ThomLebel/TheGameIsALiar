@@ -674,11 +674,14 @@
     <Compile Include="Assets\Scripts\EnemyScript.cs" />
     <Compile Include="Assets\Scripts\GameConstants.cs" />
     <Compile Include="Assets\Scripts\GameMaster.cs" />
+    <Compile Include="Assets\Scripts\LevelGeneration.cs" />
     <Compile Include="Assets\Scripts\MeleeWeapon.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\RangedWeapon.cs" />
     <Compile Include="Assets\Scripts\RoomInformation.cs" />
     <Compile Include="Assets\Scripts\RoomTransition.cs" />
+    <Compile Include="Assets\Scripts\RoomType.cs" />
+    <Compile Include="Assets\Scripts\SpawnObject.cs" />
     <Compile Include="Assets\Scripts\Weapon.cs" />
     <Compile Include="Assets\Scripts\WeaponInfo.cs" />
   </ItemGroup>
